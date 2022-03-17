@@ -3,8 +3,11 @@ from pyLoraRFM9x import LoRa, ModemConfig
 # This is our callback function that runs when a message is received
 def on_recv(payload):
     print("From:", payload.header_from)
-    print("Received:", payload.message)
+    #print("Received:", payload.message)
     print("RSSI: {}; SNR: {}".format(payload.rssi, payload.snr))
+    mess = payload.message
+    #mess = int(mess)
+    print(mess,"hej fra veriable")
 
 # Use chip select 1. GPIO pin 5 will be used for interrupts and set reset pin to 25
 # The address of this device will be set to 222
