@@ -84,7 +84,14 @@ makeDesk()
 
 insertData("temp")
 sleep(2)
-takeOut()
+SQLdata = takeOut()
+print(type(SQLdata), SQLdata)
+tag = SQLdata[1]
+dateTemp = SQLdata[2]
+date = dateTemp[0:21]
+temperature = SQLdata[3]
+humi = SQLdata[4]
+print(type(tag), tag, type(date), date, type(temperature), temperature, type(humi), humi)
 
 @app.route('/')
 def home():
