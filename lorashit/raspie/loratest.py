@@ -8,11 +8,12 @@ def on_recv(payload):
     mess = payload.message
     print(mess,"hej fra veriable")
     mess = str(mess)
-    frontslicethebitch = mess[3:9]
-    print(frontslicethebitch)
-    Splitthebitch = frontslicethebitch.split(', ')
-    print(Splitthebitch)
-    
+    slice = mess[3:9]
+    print(slice)
+    Split = slice.split(', ')
+    print(Split)
+    Ints = [int(x) for x in Split]
+    print(Ints)
 
 # Use chip select 1. GPIO pin 5 will be used for interrupts and set reset pin to 25
 # The address of this device will be set to 222
