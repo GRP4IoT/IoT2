@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rødlist Indeks</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="20">
+        <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+    </head>
+    <body>
+        <div id="wrap">
+<header>
+<h1>Rødliste - indeks</h1>
+</header>
+
+<div class="div_main">
+<table>
+    <tr>
+        <th>Sensor Nr.</th>
+        <th>{{rowData[0][1]}}</th>
+    </tr>
+    <tr>
+        <td>Fugtighed</td>
+        <td>{{rowData[0][4]}} %</td>
+    </tr>
+    <tr>
+        <td>Temperatur</td>
+        <td>{{rowData[0][3]}} °C</td>
+    </tr>
+    <tr>
+        <td>GPS Latitude</td>
+        <td>{{rowData[0][5]}}</td>
+    </tr>
+    <tr>
+        <td>GPS Longitude</td>
+        <td>{{rowData[0][6]}}</td>
+    </tr>
+    <tr>
+        <td>Opdateret</td>
+        <td>{{rowData[0][2]}}</td>
+    </tr>
+</table>
+{{aPlot}}
+{{bPlot}}
+<!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> -->
+</div>
+</div>
+</body>
+</html>
