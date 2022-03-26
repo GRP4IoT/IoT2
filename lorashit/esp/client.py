@@ -5,16 +5,15 @@ import dht
 import GPSfunk
 
 sensor = dht.DHT11(Pin(15))
-#laver en tom liste. som hedder senslist
 senslist = []
 def sensor2():
     try:
-        #måler med DHT11 sensor og putter temp og hum ind i senslist
         sleep(2)
         sensor.measure()
         temp = sensor.temperature()
         tempF = temp * (9/5) + 32.0
         hum = sensor.humidity()
+        #senslist = [temp,hum]
         senslist.append(hum)
         senslist.append(temp)
         print(senslist)
@@ -25,13 +24,17 @@ def sensor2():
     return temp,hum
 
 def gps():
-    #bruger GPS til at finde latitude og longtitude og derefter putter dem ind i vores senslist
-    gpsxd = GPSfunk.main()
-    lat = gpsxd[1]
-    lon = gpsxd[2]
-    senslist.append(lat)
-    senslist.append(lon)
+    try:
+        gpsxd = GPSfunk.main()
+        lat = gpsxd[1]
+        lon = gpsxd[2]
+        senslist.append(lat)
+        senslist.append(lon)
     
+    except:
+        senslist.append('11.11111')
+        senslist.append('11.11111')
+        
 #pins:  cs = 5, vin = 3v3, ground = ground, g0 = 0, sck = 14, miso = 12, mosi = 13
 # Lora Parameters
 RFM95_RST = 27
@@ -51,15 +54,16 @@ lora = LoRa(RFM95_SPIBUS, RFM95_INT, CLIENT_ADDRESS, RFM95_CS, reset_pin=RFM95_R
 while True:
     sensor2()
     print(senslist)
-    sleep(1)
+    sleep(5)
     gps()
     print(senslist)
-    sleep(1)
+    sleep(3)
+    #sensor2()
+    #senslist = [temp, hum, lat, lon]
     sendData = str(senslist)
     print(type(sendData), sendData, "fra loopen")
     sleep(2)
     lora.send_to_wait(sendData, SERVER_ADDRESS)
     print("sent")
-    sleep(5)
-    #til sidst gør vi senslist tom
+    sleep(100)
     senslist = []
