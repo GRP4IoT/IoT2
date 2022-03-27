@@ -21,11 +21,11 @@
     </tr>
     <tr>
         <td>Fugtighed</td>
-        <td>{{rowData[0][4]}} %</td>
+        <td>{{rowData[0][3]}} %</td>
     </tr>
     <tr>
         <td>Temperatur</td>
-        <td>{{rowData[0][3]}} °C</td>
+        <td>{{rowData[0][4]}} °C</td>
     </tr>
     <tr>
         <td>GPS Latitude</td>
@@ -40,8 +40,8 @@
         <td>{{rowData[0][2]}}</td>
     </tr>
 </table>
-{{aPlot}}
-{{bPlot}}
+<img class="charts" src='data:image/png;base64,{{aPlot}}' />
+<!--<img class="charts" src='data:image/png;base64,{{bPlot}}' /> -->
 <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> -->
 </div>
 </div>
