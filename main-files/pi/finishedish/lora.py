@@ -86,10 +86,10 @@ def alData():
         conn = sqlite3.connect('/home/pi/Desktop/LoneLora/databasen.db', check_same_thread=False)
         curs = conn.cursor()
         curs.execute("""SELECT * FROM (
-            SELECT * FROM IOTINFOEN ORDER BY ID DESC LIMIT 12)
+            SELECT * FROM IOTINFOEN ORDER BY ID DESC LIMIT 8)
             ORDER BY ID ASC;""")
         allData = curs.fetchall()
-        print(allData)
+        #print(allData)
         return allData
     except sqlite3.Error as e:
         conn.rollback()
@@ -105,34 +105,34 @@ def matPlotsTemp():
     hums = []
     for i in altData:
         dates.append(i[2])
-        temps.append(i[3])
-        hums.append(i[4])
+        temps.append(i[4])
+        hums.append(i[3])
     x = dates
     y = temps
     z = hums
     #matplotting
     fig = Figure()
     ax = fig.subplots()
-    #fig.subplots_adjust(bottom=0.3)
+    fig.subplots_adjust(bottom=0.3)
     ax.tick_params(axis='x', which="both", rotation=30)
     ax = fig.subplots()
     ax.set_facecolor("#fff") # inner plot background color HTML white
     fig.patch.set_facecolor('#fff') # outer plot background color HTML white
-    ax.plot(x, y, linestyle = 'dashed', c = '#11f', linewidth = '1.5',
+    ax.plot(x, y, linestyle = 'dashed', c = 'red', linewidth = '1.5',
     marker = 'o', mec = 'hotpink', ms = 10, mfc = 'hotpink' )
-    ax.plot(x, z, linestyle = 'dashed', c= '#11f', linewidth = '1.5',
+    ax.plot(x, z, linestyle = 'dashed', c= '#1ff', linewidth = '1.5',
     marker = 'o', mec = 'black', ms = 10, mfc = 'black')
     ax.set_xlabel('Dato & tid')
-    ax.set_ylabel('Temperatur')
-    ax.xaxis.label.set_color('hotpink') #setting up X-axis label color to hotpink
-    ax.yaxis.label.set_color('hotpink') #setting up Y-axis label color to hotpink
+    ax.set_ylabel('Temp & fugt')
+    ax.xaxis.label.set_color('black') #setting up X-axis label color to hotpink
+    ax.yaxis.label.set_color('black') #setting up Y-axis label color to hotpink
     ax.tick_params(axis='x', colors='black') #setting up X-axis tick color to black
     ax.tick_params(axis='y', colors='black') #setting up Y-axis tick color to black
-    ax.spines['left'].set_color('blue') # setting up Y-axis tick color to blue
-    ax.spines['top'].set_color('blue') #setting up above X-axis tick color to blue
-    ax.spines['bottom'].set_color('blue') #setting up above X-axis tick color to blue
-    ax.spines['right'].set_color('blue') #setting up above X-axis tick color to blue
-    #fig.subplots_adjust(bottom=0.3) 
+    ax.spines['left'].set_color('#92d293') # setting up Y-axis tick color to blue
+    ax.spines['top'].set_color('#92d293') #setting up above X-axis tick color to blue
+    ax.spines['bottom'].set_color('#92d293') #setting up above X-axis tick color to blue
+    ax.spines['right'].set_color('#92d293') #setting up above X-axis tick color to blue
+    fig.subplots_adjust(bottom=0.3) 
     ax.tick_params(axis="x", which="both", rotation=30) 
     #Save to temp buff
     buf = BytesIO()
@@ -186,13 +186,15 @@ def on_recv(payload):
     global ourFloats
     global saveToDB
     print("From:", payload.header_from)
-    #print("Received:", payload.message)
+    print("Received:", payload.message)
     print("RSSI: {}; SNR: {}".format(payload.rssi, payload.snr))
     mess = payload.message
     #print(mess,"hej fra veriable")
     mess = str(mess)
+    print(mess)
+    #b"[34, 24, '55.70629', '12.53968']"
     slice = mess[3:9]
-    slice2 = mess[12:32]
+    slice2 = mess[12:30]
     #print("slice 2", slice2)
     #print(slice)
     Split = slice.split(', ')
@@ -213,21 +215,15 @@ lora.on_recv = on_recv
 
 # Send a message to a recipient device with address 10
 # Retry sending the message twice if we don't get an acknowledgment from the recipient
-message = "Hello there!"
-status = lora.send_to_wait(message, 1, retries=20)
-if status is True:
-    print("Message sent!")
-else:
-    print("No acknowledgment from recipient")
+
 
 @app.route('/')
 def home():
     rowData = getData()
     alData()
     aPlot = matPlotsTemp()
-    #bPlot = matPlotsHum()
-    print(rowData, "fra hjemmeside")
-    print(rowData[0][0], "fra hjemmeside")
+    #print(rowData, "fra hjemmeside")
+    #print(rowData[0][0], "fra hjemmeside")
     return render_template('home.html', rowData=rowData, aPlot=aPlot)
 
 if __name__ == '__main__':
@@ -237,6 +233,15 @@ if __name__ == '__main__':
 print("flask has started")
 
 while True:
+    message = "Hello there!"
+    status = lora.send_to_wait(message, 1, retries=20)
+    #if status is True:
+        #print("Message sent!")
+    #else:
+        #print("No acknowledgment from recipient")
+    if status is False:
+        print("No connection to ESP")
+    
     if saveToDB == True:
         try:
             print("Trying to save to database")
